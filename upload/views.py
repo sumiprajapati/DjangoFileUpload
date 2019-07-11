@@ -6,8 +6,6 @@ from django.contrib import messages
 from .models import Contact
 
 
-# Create your views here.
-
 @permission_required('admin.can_add_log_entry')
 def contact_upload(request):
     template = "contact_upload.html"
@@ -34,11 +32,17 @@ def contact_upload(request):
                 ip_address=column[3],
 
             )
-
     context = {}
     return render(request, template, context)
 
-#
-# @permission_required('admin.can_add_log_entry')
-# def contact_download(request):
-#     items =
+
+@permission_required('admin.can_add_log_entry')
+def contact_download(request):
+    items = Contact.objects.all()
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="contact.csv"'
+    writer = csv.writer(response, delimiter=',')
+    writer.writerow(['first_name', 'last_name', 'email', 'ip_address'])
+    for obj in items:
+        writer.writerow([obj.first_name, obj.last_name, obj.email, obj.ip_address])
+    return response

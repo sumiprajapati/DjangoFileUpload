@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from upload.views import contact_upload
+from upload.views import contact_upload,contact_download
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('upload-csv/', contact_upload, name="contact-upload"),
+    path('download-csv', contact_download, name="contact-download"),
 ]
